@@ -7,6 +7,9 @@ exports.createUser = async (userData) => {
     return { id: result.insertId, ...userData };
 };
 
-exports.getUserByEmail = (email) => {
+exports.getUserByEmail = async (email) => {
     // SQL query to find user by email
+    const query = 'SELECT * FROM users WHERE email = ?';
+    const [rows] = await db.promise().query(query, [email]);
+    return rows[0]; // Return the user object or undefined if not found
 };
