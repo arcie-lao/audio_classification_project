@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mysql:8.0  # Use the latest MySQL image
+    container_name: myapp_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Root password for MySQL
+      MYSQL_DATABASE: myapp_test         # Dummy database name
+      MYSQL_USER: testuser               # Test user for the database
+      MYSQL_PASSWORD: testpassword       # Password for the test user
+    ports:
+      - "3306:3306"                      # Expose port 3306 to your local machine
+    volumes:
+      - db_data:/var/lib/mysql           # Persist data even if container is restarted
+      - ./init-scripts:/docker-entrypoint-initdb.d # Run initialization scripts if needed
+
+volumes:
+  db_data:
