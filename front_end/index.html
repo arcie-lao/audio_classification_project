@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Usage Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>API Usage Tracker</h1>
+
+    <!-- Registration Form -->
+    <div class="section" id="register-section">
+        <h2>Register</h2>
+        <input type="email" id="register-email" placeholder="Email" required>
+        <input type="password" id="register-password" placeholder="Password" required>
+        <button onclick="register()">Register</button>
+    </div>
+
+    <!-- Login Form -->
+    <div class="section" id="login-section">
+        <h2>Login</h2>
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <!-- Usage Section -->
+    <div class="section hidden" id="usage-section">
+        <h2>Welcome!</h2>
+        <button onclick="getUsage()">Get Usage</button>
+        <button onclick="incrementUsage()">Increment Usage</button>
+        <p id="usage-output"></p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

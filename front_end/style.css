@@ -1,0 +1,19 @@
+body {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+input, button {
+  margin: 5px 0;
+  padding: 10px;
+  width: 100%;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.hidden {
+  display: none;
+}

@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwtHelper = require('../utils/jwtHelper');
 const User = require('../models/userModel');
-const ApiUsage = require('../models/apiUsageModel');
 
 exports.register = async (req, res) => {
     const { email, password } = req.body;
@@ -30,10 +29,23 @@ exports.login = async (req, res) => {
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
-        
-        res.status(201).json({ message: 'Login successful' });
-    } catch (err) {
-        console.error('Login error:', err);
+
+        const sessionToken = jwtHelper.generateToken({ email, userId: user.id }, {expiresIn: '1h'});
+
+        // Set session token as httpOnly cookie with SameSite attribute
+        res.cookie('token', sessionToken, 
+            { 
+                httpOnly: true,
+                secure: false,
+                sameSite: 'lax' 
+            })
+            .status(200).json({ message: 'Login successful' });
+        } catch (err) {
+        console.error('Login error:', err); // Log the error
         res.status(500).json({ error: 'Login failed' });
     }
+};
+
+exports.logout = (req, res) => {
+    res.clearCookie('session_token').json({ message: 'Logged out successfully' });
 };
