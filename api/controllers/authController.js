@@ -33,13 +33,13 @@ exports.login = async (req, res) => {
         const sessionToken = jwtHelper.generateToken({ email, userId: user.id }, {expiresIn: '1h'});
 
         // Set session token as httpOnly cookie with SameSite attribute
-        res.cookie('token', sessionToken, 
+        res.cookie('token', sessionToken,
             { 
                 httpOnly: true,
                 secure: false,
-                sameSite: 'lax' 
+                sameSite: 'Lax',
             })
-            .status(200).json({ message: 'Login successful' });
+            .status(200).json({ message: 'Login successful', userId: user.id });
         } catch (err) {
         console.error('Login error:', err); // Log the error
         res.status(500).json({ error: 'Login failed' });
@@ -47,5 +47,5 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-    res.clearCookie('session_token').json({ message: 'Logged out successfully' });
+    res.clearCookie('token').json({ message: 'Logged out successfully' });
 };

@@ -1,8 +1,9 @@
 const jwtHelper = require('../utils/jwtHelper');
 
 const sessionMiddleware = (req, res, next) => {
-    console.log('Session Token:', req.cookies.token);
     const token = req.cookies.token;
+    console.log('Cookies:', req.cookies);
+    console.log('Session token:', token);
     if (!token) return res.status(401).json({ error: 'Session token missing' });
 
     try {

@@ -28,6 +28,7 @@ async function login() {
   const data = await response.json();
   if (response.ok) {
       alert('Login successful');
+    //   sessionStorage.setItem('userId', data.userId);
       document.getElementById('login-section').classList.add('hidden');
       document.getElementById('register-section').classList.add('hidden');
       document.getElementById('usage-section').classList.remove('hidden');
@@ -45,7 +46,7 @@ async function getUsage() {
 
   const data = await response.json();
   if (response.ok) {
-      document.getElementById('usage-output').innerText = `Current Usage: ${data.usage.count}`;
+      document.getElementById('usage-output').innerText = `Current Usage: ${data.usage.api_usage}`;
   } else {
       alert(data.error);
   }
@@ -55,7 +56,6 @@ async function getUsage() {
 async function incrementUsage() {
   const response = await fetch('http://localhost:3000/admin/increment-usage', {
       method: 'POST',
-      session_token: localStorage.getItem('session_token')
   });
 
   const data = await response.json();
@@ -71,7 +71,6 @@ async function incrementUsage() {
 async function logout() {
   const response = await fetch('http://localhost:3000/auth/logout', {
       method: 'POST',
-      session_token: localStorage.getItem('session_token')
   });
 
   const data = await response.json();

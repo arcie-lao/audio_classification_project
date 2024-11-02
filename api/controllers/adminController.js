@@ -2,8 +2,8 @@ const ApiUsage = require('../models/apiUsageModel');
 
 // Function to get usage count by user ID
 exports.getUsage = async (req, res) => {
-    console.log('User:', req.user);
-    const userId = req.user.id; // Assuming user is authenticated and user ID is available in `req.user`
+    // console.log('User:', req.user);
+    const userId = req.user.userId;
     try {
         const usage = await ApiUsage.getUsageByUserId(userId);
         if (!usage) {
@@ -18,7 +18,7 @@ exports.getUsage = async (req, res) => {
 
 // Function to increment usage count by user ID
 exports.incrementUsage = async (req, res) => {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     try {
         await ApiUsage.incrementUsage(userId);
         res.json({ message: 'Usage incremented successfully' });

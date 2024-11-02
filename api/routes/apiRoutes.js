@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const apiController = require('../controllers/apiController');
-const adminController = require('../controllers/adminController');
-const authMiddleware = require('../middleware/authMiddleware');
+const apiMiddleware = require('../middleware/apiMiddleware');
 
-router.get('/test', authMiddleware.authenticateApiToken, apiController.testCallback);
+router.get('/test', apiMiddleware, apiController.testCallback);
 
 module.exports = router;
