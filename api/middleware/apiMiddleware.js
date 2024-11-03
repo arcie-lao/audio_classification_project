@@ -18,6 +18,10 @@ const apiMiddleware = async (req, res, next) => {
             return res.status(403).json({ error: 'Invalid API token' });
         }
 
+        if (user.api_usage > 20 && user.role == 'user') {
+            return res.json({ warning: 'API limit exceeded 20 uses' });
+        }
+
         req.user = user; // Attach user data to request
         next();
     } catch (err) {

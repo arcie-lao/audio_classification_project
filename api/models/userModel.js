@@ -13,3 +13,9 @@ exports.getUserByEmail = async (email) => {
     const [rows] = await db.promise().query(query, [email]);
     return rows[0]; // Return the user object or undefined if not found
 };
+
+exports.getAllUsers = async () => {
+    const query = 'SELECT * FROM users';
+    const [rows] = await db.promise().query(query);
+    return rows;
+}

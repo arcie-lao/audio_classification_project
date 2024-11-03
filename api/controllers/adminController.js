@@ -1,4 +1,5 @@
 const ApiUsage = require('../models/apiUsageModel');
+const User = require('../models/userModel');
 
 // Function to get usage count by user ID
 exports.getUsage = async (req, res) => {
@@ -27,3 +28,13 @@ exports.incrementUsage = async (req, res) => {
         res.status(500).json({ error: 'Failed to increment usage count' });
     }
 };
+
+exports.getUsers = async (req, res) => {
+    try {
+        const users = await User.getAllUsers();
+        res.json({ users });
+    } catch (err) {
+        console.error('Error fetching users:', err);
+        res.status(500).json({ error: 'Failed to fetch user data' });
+    }
+}

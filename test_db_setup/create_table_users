@@ -4,5 +4,6 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     api_token VARCHAR(255),
     api_usage INT DEFAULT 0,
+    role VARCHAR(20) DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -35,11 +35,9 @@ exports.login = async (req, res) => {
         // Set session token as httpOnly cookie with SameSite attribute
         res.cookie('token', sessionToken,
             { 
-                httpOnly: true,
-                secure: false,
-                sameSite: 'Lax',
+                httpOnly: false
             })
-            .status(200).json({ message: 'Login successful', userId: user.id });
+            .status(200).json({ message: 'Login successful', userId: user.id, role: user.role });
         } catch (err) {
         console.error('Login error:', err); // Log the error
         res.status(500).json({ error: 'Login failed' });

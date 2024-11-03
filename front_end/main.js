@@ -31,6 +31,9 @@ async function login() {
     //   sessionStorage.setItem('userId', data.userId);
       document.getElementById('login-section').classList.add('hidden');
       document.getElementById('register-section').classList.add('hidden');
+      if (data.role == 'admin') {
+          document.getElementById('admin-section').classList.remove('hidden');
+      }
       document.getElementById('usage-section').classList.remove('hidden');
   } else {
       alert(data.error);
@@ -52,16 +55,20 @@ async function getUsage() {
   }
 }
 
-// Increment the API usage count
-async function incrementUsage() {
-  const response = await fetch('http://localhost:3000/admin/increment-usage', {
-      method: 'POST',
+async function getUsers() {
+  const response = await fetch('http://localhost:3000/admin/users', {
+      method: 'GET',
+      credentials: 'include'
   });
 
   const data = await response.json();
   if (response.ok) {
-      alert(data.message);
-      getUsage(); // Refresh the usage count
+    for (let i = 0; i < data.users.length; i++) {
+        const user = data.users[i];
+        const userElement = document.createElement('div');
+        userElement.innerText = `User ${i + 1}: ${user.email}, Role: ${user.role}, API Usage: ${user.api_usage}`;
+        document.getElementById('users-output').appendChild(userElement);
+    }
   } else {
       alert(data.error);
   }
@@ -71,11 +78,14 @@ async function incrementUsage() {
 async function logout() {
   const response = await fetch('http://localhost:3000/auth/logout', {
       method: 'POST',
+      credentials: 'include'
   });
 
   const data = await response.json();
   alert(data.message);
+  document.getElementById('admin-section').classList.add('hidden');
   document.getElementById('usage-section').classList.add('hidden');
+  document.getElementById('usage-output').innerText = '';
   document.getElementById('login-section').classList.remove('hidden');
   document.getElementById('register-section').classList.remove('hidden');
 }
