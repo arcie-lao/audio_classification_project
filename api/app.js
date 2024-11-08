@@ -7,9 +7,10 @@ const cors = require('cors');
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.raw({ type: 'audio/*', limit: '50mb' }));
 app.use(helmet());
 app.use(cors({
-  origin: 'http://localhost:5500', // Your frontend origin
+  origin: true, // frontend origin
   credentials: true // To allow cookies with the frontend
 }));
 
@@ -24,3 +25,4 @@ app.use('/admin', adminRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// app.listen();
