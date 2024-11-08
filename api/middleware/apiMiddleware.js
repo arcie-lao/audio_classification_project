@@ -19,7 +19,7 @@ const apiMiddleware = async (req, res, next) => {
         }
 
         if (user.api_usage > 20 && user.role == 'user') {
-            return res.json({ warning: 'API limit exceeded 20 uses' });
+            req.apiWarning = 'API limit exceeded 20 uses';
         }
 
         req.user = user; // Attach user data to request
