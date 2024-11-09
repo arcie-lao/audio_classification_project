@@ -10,10 +10,10 @@ exports.analyzeAudio = async (req, res) => {
         // Increment API usage for tracking
         await ApiUsage.incrementUsage(req.user.id);
 
-        // Read the audio data
-        const audioData = req.body;
+        console.log(req.body);
 
-        console.log(audioData);
+        // Read the audio data
+        const audioData = Buffer.from(req.body);
 
         // Send audio data to Azure server
         const response = await fetch(
