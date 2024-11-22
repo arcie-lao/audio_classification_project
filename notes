@@ -2,7 +2,8 @@ To do list for COMP4537
 
 - Make a new front end, basic html, js and css (DONE)
 - Implement feature that allows bulk files classification (DONE)
-- Try to implement live classification
+- Fix bug with frontend related to admin issues with DOM (two similar id issue)
+- Try to implement live classification 
 
 Use cases:
 
