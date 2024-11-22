@@ -1,5 +1,6 @@
 const jwtHelper = require('../utils/jwtHelper');
 const User = require('../models/userModel');
+const ApiUsage = require('../models/apiUsageModel');
 
 // Middleware to authenticate API token
 const apiMiddleware = async (req, res, next) => {
@@ -8,7 +9,7 @@ const apiMiddleware = async (req, res, next) => {
 
     // Check if no token in headers, then try cookies
     if (!token && req.cookies && req.cookies.token) {
-        token = req.cookies.token; // Adjust this key based on your cookie's name
+        token = req.cookies.token;
     }
 
     if (!token) {
@@ -24,6 +25,8 @@ const apiMiddleware = async (req, res, next) => {
         if (!user) {
             return res.status(403).json({ error: 'Invalid API token or session cookie' });
         }
+
+        ApiUsage.incrementUsage(user.id);
 
         // Check API usage for non-admin users
         if (user.api_usage > 20 && user.role === 'user') {

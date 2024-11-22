@@ -1,15 +1,10 @@
-const ApiUsage = require('../models/apiUsageModel');
-
 exports.testCallback = async (req, res) => {
-    await ApiUsage.incrementUsage(req.user.id);
     res.json({ message: 'Callback successful' });
 };
 
 exports.analyzeAudio = async (req, res) => {
     try {
         // Increment API usage for tracking
-        await ApiUsage.incrementUsage(req.user.id);
-
         console.log(req.body);
 
         // Read the audio data
