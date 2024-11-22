@@ -47,3 +47,24 @@ exports.login = async (req, res) => {
 exports.logout = (req, res) => {
     res.clearCookie('token').json({ message: 'Logged out successfully' });
 };
+
+exports.getSession = async (req, res) => {
+    try {
+        const user = req.user; // Extracted from the token in the middleware
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Return user details and role
+        res.status(200).json({
+            message: 'Session is valid',
+            email: user.email,
+            role: user.role,
+        });
+    } catch (err) {
+        console.error('Session validation error:', err);
+        res.status(500).json({ error: 'Session validation failed' });
+    }
+};
+
