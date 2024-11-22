@@ -1,0 +1,13 @@
+To do list for COMP4537
+
+- Make a new front end, basic html, js and css (DONE)
+- Implement feature that allows bulk files classification (DONE)
+- Try to implement live classification
+
+Use cases:
+
+- Youtube videos classification on what kind of video it is based on the audio
+- In call centers we can classify different kinds of calls we get and use it for metrics
+	- for example we can determine how many % of calls are useless
+	- can detect calls that has mean customers who shout / aggressive
+- Can classify songs that you like based on what kind of sounds there are
