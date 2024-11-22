@@ -7,4 +7,6 @@ router.get('/test', apiMiddleware, apiController.testCallback);
 
 router.post('/analyze', apiMiddleware, apiController.analyzeAudio);
 
+router.post('/analyzeSequential', apiMiddleware, apiController.analyzeMultipleAudioSequential);
+
 module.exports = router;
