@@ -35,7 +35,9 @@ exports.login = async (req, res) => {
         // Set session token as httpOnly cookie with SameSite attribute
         res.cookie('token', sessionToken,
             { 
-                httpOnly: false
+                httpOnly: true,
+                secure: true,   // Omit this for localhost
+                sameSite: 'None' // 'Lax' for localhost
             })
             .status(200).json({ message: 'Login successful', userId: user.id, role: user.role });
         } catch (err) {
