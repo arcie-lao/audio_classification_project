@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.raw({ type: 'audio/*', limit: '50mb' }));
 app.use(cors({
   origin: true, // frontend origin
-  methods: 'GET,POST,OPTIONS,PUT',
+  methods: 'GET,POST,OPTIONS,PUT,DELETE',
   allowedHeaders: 'Content-Type, Authorization',
   credentials: true // To allow cookies with the frontend
 }));
