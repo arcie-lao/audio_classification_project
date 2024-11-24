@@ -46,6 +46,24 @@ exports.login = async (req, res) => {
     }
 };
 
+exports.changePassword = async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    try {
+        const user = await User.getUserByEmail(req.user.email);
+        if (!user || !(await bcrypt.compare(oldPassword, user.password))) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await User.updatePassword(user.id, hashedPassword);
+
+        res.json({ message: 'Password updated successfully' });
+    } catch (err) {
+        console.error('Password update error:', err);
+        res.status(500).json({ error: 'Password update failed' });
+    }
+};
+
 exports.logout = (req, res) => {
     res.clearCookie('token').json({ message: 'Logged out successfully' });
 };

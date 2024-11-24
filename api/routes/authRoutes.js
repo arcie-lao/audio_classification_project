@@ -6,6 +6,7 @@ const sessionMiddleware = require('../middleware/sessionMiddleware');
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
+router.post('/changePassword', sessionMiddleware, authController.changePassword);
 
 router.get('/session', sessionMiddleware, authController.getSession);
 
