@@ -8,5 +8,6 @@ router.get('/usage', sessionMiddleware, adminController.getUsage);
 
 router.get('/users', adminMiddleware, adminController.getUsers);
 
+router.delete('/deleteUserByEmail', adminMiddleware, adminController.deleteUserByEmail);
 
 module.exports = router;

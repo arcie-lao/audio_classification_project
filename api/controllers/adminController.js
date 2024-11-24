@@ -37,4 +37,20 @@ exports.getUsers = async (req, res) => {
         console.error('Error fetching users:', err);
         res.status(500).json({ error: 'Failed to fetch user data' });
     }
-}
+};
+
+exports.deleteUserByEmail = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await User.getUserByEmail(email);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        await User.deleteUserByEmail(email);
+        res.json({ message: 'User deleted successfully' });
+    } catch (err) {
+        console.error('User deletion error:', err);
+        res.status(500).json({ error: 'User deletion failed' });
+    }
+};

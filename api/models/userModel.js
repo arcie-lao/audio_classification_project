@@ -24,3 +24,8 @@ exports.updatePassword = async (userId, newPassword) => {
     const query = 'UPDATE users SET password = ? WHERE id = ?';
     await db.promise().query(query, [newPassword, userId]);
 };
+
+exports.deleteUserByEmail = async (email) => {
+    const query = 'DELETE FROM users WHERE email = ?';
+    await db.promise().query(query, [email]);
+}
