@@ -101,7 +101,7 @@ exports.calculateScoreData = async (req, res) => {
         });
 
         // Find the label with the highest cumulative score
-        var sortedLabels = Object.entries(labelScores)
+        let sortedLabels = Object.entries(labelScores)
             .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
             .map(([label, score]) => ({ label, score }));
 
