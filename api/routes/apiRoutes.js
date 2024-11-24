@@ -9,4 +9,6 @@ router.post('/analyze', apiMiddleware, apiController.analyzeAudio);
 
 router.post('/analyzeSequential', apiMiddleware, apiController.analyzeMultipleAudioSequential);
 
+router.post('/calculateScore', apiMiddleware, apiController.calculateScoreData);
+
 module.exports = router;
