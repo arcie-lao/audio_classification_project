@@ -1,0 +1,14 @@
+{
+  "errors": {
+      "analyzeAudioFailed": "Audio analysis failed.",
+      "filesNotUploaded": "No files uploaded.",
+      "invalidData": "No valid data provided.",
+      "scoreSummarizationFailed": "Score summarization failed."
+  },
+  "success": {
+      "callbackSuccess": "Callback successful.",
+      "audioAnalyzedSuccess": "Audio analyzed successfully.",
+      "filesAnalyzedSuccess": "All files analyzed.",
+      "scoresSummarized": "Scores summarized."
+  }
+}

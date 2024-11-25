@@ -1,36 +1,33 @@
 const multer = require('multer');
+const messages = require('../config/controllersMessages/apiMessages.json');
 
 exports.testCallback = async (req, res) => {
-    res.json({ message: 'Callback successful' });
+    res.json({ message: messages.success.callbackSuccess });
 };
 
 const upload = multer();
 
 exports.analyzeAudioV1 = async (req, res) => {
     try {
-        // Increment API usage for tracking
         console.log(req.body);
-        // Read the audio data
         const audioData = Buffer.from(req.body);
-        // Send audio data to Azure server
-        const response = await fetch(
-            process.env.AST_URL, {
-                headers: {
-                    "Accept": "application/json",
-                    "Authorization": `Bearer ${process.env.AST_KEY}`,
-                    "Content-Type": "audio/flac"
-                },
-                method: 'POST',
-                body: audioData        
-            }
-        )
+
+        const response = await fetch(process.env.AST_URL, {
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${process.env.AST_KEY}`,
+                "Content-Type": "audio/flac"
+            },
+            method: 'POST',
+            body: audioData
+        });
 
         const result = await response.json();
 
-        res.json({ message: 'Audio analyzed successfully', data: result });
+        res.json({ message: messages.success.audioAnalyzedSuccess, data: result });
     } catch (error) {
         console.error('Error analyzing audio:', error);
-        res.status(500).json({ error: 'Audio analysis failed' });
+        res.status(500).json({ error: messages.errors.analyzeAudioFailed });
     }
 };
 
@@ -41,10 +38,9 @@ exports.analyzeAudio = [
             const files = req.files;
 
             if (!files || files.length === 0) {
-                return res.status(400).json({ error: 'No files uploaded' });
+                return res.status(400).json({ error: messages.errors.filesNotUploaded });
             }
 
-            // Process each file and send it to Azure server
             const promises = files.map(file =>
                 fetch(process.env.AST_URL, {
                     headers: {
@@ -59,10 +55,10 @@ exports.analyzeAudio = [
 
             const results = await Promise.all(promises);
 
-            res.json({ message: 'All files analyzed', data: results, apiWarning: req.apiWarning });
+            res.json({ message: messages.success.filesAnalyzedSuccess, data: results, apiWarning: req.apiWarning });
         } catch (error) {
             console.error('Error analyzing files:', error);
-            res.status(500).json({ error: 'Audio analysis failed' });
+            res.status(500).json({ error: messages.errors.analyzeAudioFailed });
         }
     }
 ];
@@ -74,7 +70,7 @@ exports.analyzeMultipleAudioSequential = [
             const files = req.files;
 
             if (!files || files.length === 0) {
-                return res.status(400).json({ error: 'No files uploaded' });
+                return res.status(400).json({ error: messages.errors.filesNotUploaded });
             }
 
             const sequentialResults = [];
@@ -89,72 +85,60 @@ exports.analyzeMultipleAudioSequential = [
                     method: 'POST',
                     body: audioData.buffer
                 });
-    
+
                 const result = await response.json();
                 sequentialResults.push(result);
             }
 
-            res.json({ message: 'All files analyzed', data: sequentialResults, apiWarning: req.apiWarning });
+            res.json({ message: messages.success.filesAnalyzedSuccess, data: sequentialResults, apiWarning: req.apiWarning });
         } catch (error) {
             console.error('Error analyzing files:', error);
-            res.status(500).json({ error: 'Audio analysis failed' });
+            res.status(500).json({ error: messages.errors.analyzeAudioFailed });
         }
     }
 ];
 
-/**
- * This function calculates the cumulative scores for each label in the input data. 
- * Score is normalized.
- */
 exports.calculateScoreData = async (req, res) => {
     try {
-        const data  = req.body;
+        const data = req.body;
 
-        // Validate the input
         if (!data || !Array.isArray(data) || data.length === 0) {
-            return res.status(400).json({ error: 'No valid data provided' });
+            return res.status(400).json({ error: messages.errors.invalidData });
         }
 
-        // Object to store cumulative scores for each label
         const labelScores = {};
 
-        // Iterate over each nested array
         data.forEach((itemArray) => {
             itemArray.forEach(({ label, score }) => {
                 if (!labelScores[label]) {
                     labelScores[label] = 0;
                 }
-                labelScores[label] += score; // Add score to the cumulative score for the label
+                labelScores[label] += score;
             });
         });
 
-        // Find the label with the highest cumulative score
         let sortedLabels = Object.entries(labelScores)
             .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
             .map(([label, score]) => ({ label, score }));
 
         const topLabel = sortedLabels[0];
 
-        // Normalize the scores
         sortedLabels = normalizeScores(sortedLabels);
 
         res.json({
-            message: 'Scores summarized',
+            message: messages.success.scoresSummarized,
             cumulativeScores: sortedLabels,
             apiWarning: req.apiWarning
         });
     } catch (error) {
         console.error('Error summarizing scores:', error);
-        res.status(500).json({ error: 'Score summarization failed' });
+        res.status(500).json({ error: messages.errors.scoreSummarizationFailed });
     }
 };
 
-// Normalize the scores
 const normalizeScores = (data) => {
-    // Calculate the total score
     const totalScore = data.reduce((sum, item) => sum + item.score, 0);
 
-    // Normalize each score
     return data.map(({ label, score }) => ({
         label,
         score: score / totalScore

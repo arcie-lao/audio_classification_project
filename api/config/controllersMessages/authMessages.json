@@ -1,0 +1,18 @@
+{
+  "errors": {
+      "emailRegistered": "Email already registered.",
+      "registrationFailed": "User registration failed.",
+      "invalidCredentials": "Invalid credentials.",
+      "loginFailed": "Login failed.",
+      "passwordUpdateFailed": "Password update failed.",
+      "userNotFound": "User not found.",
+      "sessionValidationFailed": "Session validation failed."
+  },
+  "success": {
+      "userRegistered": "User registered successfully.",
+      "loginSuccessful": "Login successful.",
+      "passwordUpdated": "Password updated successfully.",
+      "logoutSuccessful": "Logged out successfully.",
+      "sessionValid": "Session is valid."
+  }
+}

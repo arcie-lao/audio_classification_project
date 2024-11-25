@@ -1,0 +1,14 @@
+{
+  "errors": {
+      "usageNotFound": "Usage data not found.",
+      "fetchUsageFailed": "Failed to fetch usage data.",
+      "incrementUsageFailed": "Failed to increment usage count.",
+      "fetchUsersFailed": "Failed to fetch user data.",
+      "userNotFound": "User not found.",
+      "userDeletionFailed": "User deletion failed."
+  },
+  "success": {
+      "incrementUsageSuccess": "Usage incremented successfully.",
+      "userDeletionSuccess": "User deleted successfully."
+  }
+}
