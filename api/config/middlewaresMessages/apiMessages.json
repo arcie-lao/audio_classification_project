@@ -1,0 +1,10 @@
+{
+  "errors": {
+      "tokenRequired": "API token or session cookie required.",
+      "invalidToken": "Invalid API token or session cookie.",
+      "tokenExpired": "Invalid or expired API token or session cookie."
+  },
+  "warnings": {
+      "apiLimitExceeded": "API limit exceeded 20 uses."
+  }
+}

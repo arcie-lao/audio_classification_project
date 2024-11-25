@@ -1,0 +1,7 @@
+{
+  "errors": {
+      "sessionTokenMissing": "Session token missing.",
+      "unauthorizedAccess": "Unauthorized access.",
+      "invalidSessionToken": "Invalid session token."
+  }
+}

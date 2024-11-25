@@ -1,6 +1,7 @@
 const jwtHelper = require('../utils/jwtHelper');
 const User = require('../models/userModel');
 const ApiUsage = require('../models/apiUsageModel');
+const messages = require('../config/middlewaresMessages/apiMessages.json');
 
 // Middleware to authenticate API token
 const apiMiddleware = async (req, res, next) => {
@@ -13,7 +14,7 @@ const apiMiddleware = async (req, res, next) => {
     }
 
     if (!token) {
-        return res.status(401).json({ error: 'API token or session cookie required' });
+        return res.status(401).json({ error: messages.errors.tokenRequired });
     }
 
     try {
@@ -23,20 +24,21 @@ const apiMiddleware = async (req, res, next) => {
 
         // Check if the token matches the one stored in the database
         if (!user) {
-            return res.status(403).json({ error: 'Invalid API token or session cookie' });
+            return res.status(403).json({ error: messages.errors.invalidToken });
         }
 
         ApiUsage.incrementUsage(user.id);
 
         // Check API usage for non-admin users
         if (user.api_usage > 20 && user.role === 'user') {
-            req.apiWarning = 'API limit exceeded 20 uses';
+            req.apiWarning = messages.warnings.apiLimitExceeded;
         }
 
         req.user = user; // Attach user data to request
         next();
     } catch (err) {
-        res.status(403).json({ error: 'Invalid or expired API token or session cookie' });
+        console.error('Token verification error:', err);
+        res.status(403).json({ error: messages.errors.tokenExpired });
     }
 };
 
