@@ -5,7 +5,8 @@
       "incrementUsageFailed": "Failed to increment usage count.",
       "fetchUsersFailed": "Failed to fetch user data.",
       "userNotFound": "User not found.",
-      "userDeletionFailed": "User deletion failed."
+      "userDeletionFailed": "User deletion failed.",
+      "fetchApiStatsFailed": "Failed to fetch API stats."
   },
   "success": {
       "incrementUsageSuccess": "Usage incremented successfully.",
