@@ -6,6 +6,34 @@ exports.testCallback = async (req, res) => {
 
 const upload = multer();
 
+exports.analyzeAudioV1 = async (req, res) => {
+    try {
+        // Increment API usage for tracking
+        console.log(req.body);
+        // Read the audio data
+        const audioData = Buffer.from(req.body);
+        // Send audio data to Azure server
+        const response = await fetch(
+            process.env.AST_URL, {
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${process.env.AST_KEY}`,
+                    "Content-Type": "audio/flac"
+                },
+                method: 'POST',
+                body: audioData        
+            }
+        )
+
+        const result = await response.json();
+
+        res.json({ message: 'Audio analyzed successfully', data: result });
+    } catch (error) {
+        console.error('Error analyzing audio:', error);
+        res.status(500).json({ error: 'Audio analysis failed' });
+    }
+};
+
 exports.analyzeAudio = [
     upload.array('audioFiles[]'),
     async (req, res) => {
@@ -31,7 +59,7 @@ exports.analyzeAudio = [
 
             const results = await Promise.all(promises);
 
-            res.json({ message: 'All files analyzed', data: results });
+            res.json({ message: 'All files analyzed', data: results, apiWarning: req.apiWarning });
         } catch (error) {
             console.error('Error analyzing files:', error);
             res.status(500).json({ error: 'Audio analysis failed' });
@@ -66,7 +94,7 @@ exports.analyzeMultipleAudioSequential = [
                 sequentialResults.push(result);
             }
 
-            res.json({ message: 'All files analyzed', data: sequentialResults });
+            res.json({ message: 'All files analyzed', data: sequentialResults, apiWarning: req.apiWarning });
         } catch (error) {
             console.error('Error analyzing files:', error);
             res.status(500).json({ error: 'Audio analysis failed' });
@@ -113,7 +141,7 @@ exports.calculateScoreData = async (req, res) => {
         res.json({
             message: 'Scores summarized',
             cumulativeScores: sortedLabels,
-            topLabel
+            apiWarning: req.apiWarning
         });
     } catch (error) {
         console.error('Error summarizing scores:', error);
