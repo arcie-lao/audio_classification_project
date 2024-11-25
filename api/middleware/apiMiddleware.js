@@ -27,6 +27,8 @@ const apiMiddleware = async (req, res, next) => {
             return res.status(403).json({ error: messages.errors.invalidToken });
         }
 
+        ApiUsage.incrementApiUsage(req.method, req.path);
+
         ApiUsage.incrementUsage(user.id);
 
         // Check API usage for non-admin users

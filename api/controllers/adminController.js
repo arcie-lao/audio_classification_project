@@ -54,3 +54,13 @@ exports.deleteUserByEmail = async (req, res) => {
         res.status(500).json({ error: messages.errors.userDeletionFailed });
     }
 };
+
+exports.getApiUsageStats = async (req, res) => {
+    try {
+        const stats = await ApiUsage.getApiUsageStats();
+        res.json({ stats });
+    } catch (err) {
+        console.error('Error fetching API usage stats:', err);
+        res.status(500).json({ error: messages.errors.fetchApiStatsFailed });
+    }
+}
