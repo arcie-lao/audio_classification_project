@@ -1,13 +1,14 @@
 const bcrypt = require('bcryptjs');
 const jwtHelper = require('../utils/jwtHelper');
 const User = require('../models/userModel');
+const messages = require('../config/controllersMessages/authMessages.json');
 
 exports.register = async (req, res) => {
     const { email, password } = req.body;
     try {
         const existingUser = await User.getUserByEmail(email);
         if (existingUser) {
-            return res.status(400).json({ error: 'Email already registered' });
+            return res.status(400).json({ error: messages.errors.emailRegistered });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -15,10 +16,10 @@ exports.register = async (req, res) => {
 
         const user = await User.createUser({ email: email, password: hashedPassword, apiToken: apiToken });
 
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).json({ message: messages.success.userRegistered });
     } catch (err) {
         console.error('Registration error:', err);
-        res.status(500).json({ error: 'User registration failed' });
+        res.status(500).json({ error: messages.errors.registrationFailed });
     }
 };
 
@@ -27,22 +28,25 @@ exports.login = async (req, res) => {
     try {
         const user = await User.getUserByEmail(email);
         if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json({ error: messages.errors.invalidCredentials });
         }
 
-        const sessionToken = jwtHelper.generateToken({ email, userId: user.id }, {expiresIn: '1h'});
+        const sessionToken = jwtHelper.generateToken({ email, userId: user.id }, { expiresIn: '1h' });
 
-        // Set session token as httpOnly cookie with SameSite attribute
-        res.cookie('token', sessionToken,
-            { 
-                httpOnly: true,
-                secure: true,   // Omit this for localhost
-                sameSite: 'None' // 'Lax' for localhost
-            })
-            .status(200).json({ message: 'Login successful', userId: user.id, role: user.role });
-        } catch (err) {
-        console.error('Login error:', err); // Log the error
-        res.status(500).json({ error: 'Login failed' });
+        res.cookie('token', sessionToken, {
+            httpOnly: false, // Adjust based on your environment
+            // secure: true, // Uncomment for HTTPS
+            // sameSite: 'None' // Adjust based on your environment
+        })
+            .status(200)
+            .json({
+                message: messages.success.loginSuccessful,
+                userId: user.id,
+                role: user.role,
+            });
+    } catch (err) {
+        console.error('Login error:', err);
+        res.status(500).json({ error: messages.errors.loginFailed });
     }
 };
 
@@ -51,21 +55,21 @@ exports.changePassword = async (req, res) => {
     try {
         const user = await User.getUserByEmail(req.user.email);
         if (!user || !(await bcrypt.compare(oldPassword, user.password))) {
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json({ error: messages.errors.invalidCredentials });
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         await User.updatePassword(user.id, hashedPassword);
 
-        res.json({ message: 'Password updated successfully' });
+        res.json({ message: messages.success.passwordUpdated });
     } catch (err) {
         console.error('Password update error:', err);
-        res.status(500).json({ error: 'Password update failed' });
+        res.status(500).json({ error: messages.errors.passwordUpdateFailed });
     }
 };
 
 exports.logout = (req, res) => {
-    res.clearCookie('token').json({ message: 'Logged out successfully' });
+    res.clearCookie('token').json({ message: messages.success.logoutSuccessful });
 };
 
 exports.getSession = async (req, res) => {
@@ -73,18 +77,16 @@ exports.getSession = async (req, res) => {
         const user = req.user; // Extracted from the token in the middleware
 
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: messages.errors.userNotFound });
         }
 
-        // Return user details and role
         res.status(200).json({
-            message: 'Session is valid',
+            message: messages.success.sessionValid,
             email: user.email,
             role: user.role,
         });
     } catch (err) {
         console.error('Session validation error:', err);
-        res.status(500).json({ error: 'Session validation failed' });
+        res.status(500).json({ error: messages.errors.sessionValidationFailed });
     }
 };
-
